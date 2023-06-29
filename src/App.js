@@ -75,7 +75,7 @@ function App() {
       notify('Nothing to Copy', true)
     }else{
       //notify(success)
-      toast.success('🦄 Wow so easy!', {
+      toast.success('😈 Wow so easy!', {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
