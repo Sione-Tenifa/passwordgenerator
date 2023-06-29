@@ -17,9 +17,7 @@ function App() {
   const [includeSymbols, setIncludeSymbols] = useState(false)
 
   const notify = (message, hasError = false) => {
-    console.log('notify')
     if(hasError){
-      console.log(message)
       toast.error(message, {
         position: 'top-center',
         autoClose: 5000, 
@@ -35,14 +33,70 @@ function App() {
   }
 
   const handleGeneratePassword = (e) => {
-    console.log('hereeee')
     if(!includeUppercase && !includeLowercase && !includeSymbols && !includenumbers){
-      console.log('in button')
       notify('You Must Select at least one option', true)
+    }
+
+    let characterList = ''
+    
+    if(includeLowercase){
+      characterList = characterList + lowerCaseLetters
+    }
+
+    if(includeUppercase){
+      characterList = characterList + upperCaseLetters
+    }
+
+    if(includenumbers){
+      characterList = characterList + numbers
+    }
+
+    if(includeSymbols){
+      characterList = characterList + specialCharacters
+    }
+
+    setPassword(createPassword(characterList))
+
+  }
+
+  const createPassword = (characterList) =>{
+    let password = ''
+    const characterListLength = characterList.length
+    for (let i = 0; i < passwordLength; i++){
+      const characterIndex = Math.round(Math.random() * characterListLength)
+      password = password + characterList.charAt(characterIndex)
+    }    
+    return password
+  }
+
+  const handleCopyPassword = (e) => {
+    console.log('copy')
+    if(password === ''){
+      notify('Nothing to Copy', true)
+    }else{
+      //notify(success)
+      toast.success('🦄 Wow so easy!', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+      copyToClipboard()
     }
   }
 
-
+  const copyToClipboard = () => {
+    const newTextArea = document.createElement('textarea')
+    newTextArea.innerText = password
+    document.body.appendChild(newTextArea)
+    newTextArea.select()
+    document.execCommand('copy')
+    newTextArea.remove()
+  }
 
   return (
     <div className="App">
@@ -50,8 +104,8 @@ function App() {
         <div className='generator'>
           <h2 className='generator__header'>Password generator</h2>
           <div className='generator__password'>
-            <h3></h3>
-            <button className='copy__btn'>
+            <h3>{password}</h3>
+            <button onClick={handleCopyPassword} className='copy__btn'>
               <FiCopy width={25} height={25}/>
             </button>
           </div>
